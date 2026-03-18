@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Cybersecurity Awareness Test</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<style>
+    .risk-high { background-color: #dc3545; color: white; }
+    .risk-medium { background-color: #ffc107; color: black; }
+    .risk-low { background-color: #28a745; color: white; }
+    .result-card { margin-top: 20px; display: none; }
+    .page-indicator { font-size: 1.1em; font-weight: bold; }
+    .nav-buttons { display: flex; justify-content: space-between; align-items: center; }
+    .question-number { color: #007bff; font-weight: bold; }
+    .answered-badge { float: right; }
+</style>
+</head>
+
+<body class="bg-light">
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark bg-dark text-white">
+<div class="container">
+<a class="navbar-brand">Cybersecurity Awareness Test</a>
+<a href="dashboard.html" class="btn btn-light">Back</a>
+</div>
+</nav>
+
+<div class="container mt-4">
+<div class="card shadow">
+<div class="card-header bg-primary text-white">
+<h5>Answer the following questions</h5>
+<p>Total Questions: 15 <span id="progressIndicator" class="float-right"></span></p>
+</div>
+
+<div class="card-body">
+<div id="questions-container">
+<!-- Questions will be loaded here via JavaScript -->
+</div>
+
+<!-- Navigation Buttons -->
+<div class="nav-buttons mt-4">
+    <button id="prevBtn" onclick="changePage(-1)" class="btn btn-secondary" disabled>← Previous</button>
+    <span id="pageIndicator" class="page-indicator">Page 1 of 3</span>
+    <button id="nextBtn" onclick="changePage(1)" class="btn btn-primary">Next →</button>
+</div>
+
+<div class="text-center mt-4">
+<button onclick="calculateScore()" class="btn btn-success btn-lg">
+Submit Test
+</button>
+<button onclick="resetTest()" class="btn btn-danger btn-lg">
+Reset Test
+</button>
+</div>
+</div>
+
+<!-- Result Card -->
+<div id="resultCard" class="card result-card">
+<div class="card-header" id="resultHeader">
+<h5>Your Results</h5>
+</div>
+<div class="card-body">
+<div id="resultContent"></div>
+<button onclick="restartTest()" class="btn btn-primary mt-3">Take Test Again</button>
+</div>
+</div>
+
+</div>
+</div>
+
+<script>
+// Cybersecurity questions with options and scores
+const questions = [
+    {
+        question: "How often should you change your passwords?",
+        options: [
+            { text: "Never, if it's strong enough", score: 1 },
+            { text: "Every 3-6 months", score: 5 },
+            { text: "Only when forced to", score: 2 },
+            { text: "Every year", score: 3 }
+        ]
+    },
+    {
+        question: "What makes a password strong?",
+        options: [
+            { text: "Your birthdate", score: 1 },
+            { text: "Simple dictionary word", score: 1 },
+            { text: "Mix of letters, numbers, and symbols", score: 5 },
+            { text: "Your pet's name", score: 1 }
+        ]
+    },
+    {
+        question: "What should you do with suspicious email attachments?",
+        options: [
+            { text: "Open them to check", score: 1 },
+            { text: "Forward to colleagues", score: 1 },
+            { text: "Delete without opening", score: 5 },
+            { text: "Scan with antivirus only", score: 3 }
+        ]
+    },
+    {
+        question: "How do you identify a phishing email?",
+        options: [
+            { text: "It looks professional", score: 1 },
+            { text: "Check sender email carefully", score: 5 },
+            { text: "It has logos", score: 2 },
+            { text: "Click links to verify", score: 1 }
+        ]
+    },
+    {
+        question: "What is two-factor authentication?",
+        options: [
+            { text: "Using two passwords", score: 2 },
+            { text: "Second verification step", score: 5 },
+            { text: "Two different accounts", score: 1 },
+            { text: "Two security questions", score: 2 }
+        ]
+    },
+    {
+        question: "How often should you update software?",
+        options: [
+            { text: "Never, it's annoying", score: 1 },
+            { text: "When updates are available", score: 5 },
+            { text: "Once a year", score: 2 },
+            { text: "Only for major versions", score: 2 }
+        ]
+    },
+    {
+        question: "What is a secure way to use public Wi-Fi?",
+        options: [
+            { text: "Access banking apps", score: 1 },
+            { text: "Use VPN", score: 5 },
+            { text: "No precautions needed", score: 1 },
+            { text: "Only browse social media", score: 2 }
+        ]
+    },
+    {
+        question: "What should you do before clicking shortened URLs?",
+        options: [
+            { text: "Click immediately", score: 1 },
+            { text: "Preview/expand the link", score: 5 },
+            { text: "Share with friends first", score: 1 },
+            { text: "Check on mobile only", score: 2 }
+        ]
+    },
+    {
+        question: "How to protect against ransomware?",
+        options: [
+            { text: "Regular backups", score: 5 },
+            { text: "Pay immediately if infected", score: 1 },
+            { text: "Ignore updates", score: 1 },
+            { text: "Use same password everywhere", score: 1 }
+        ]
+    },
+    {
+        question: "What information should you never share on social media?",
+        options: [
+            { text: "Your vacation photos", score: 3 },
+            { text: "Home address and phone", score: 5 },
+            { text: "Your favorite food", score: 1 },
+            { text: "Your hobbies", score: 1 }
+        ]
+    },
+    {
+        question: "What is social engineering?",
+        options: [
+            { text: "Building social networks", score: 1 },
+            { text: "Manipulating people for information", score: 5 },
+            { text: "Social media marketing", score: 1 },
+            { text: "Team building activities", score: 1 }
+        ]
+    },
+    {
+        question: "How to create strong security questions?",
+        options: [
+            { text: "Use real answers", score: 2 },
+            { text: "Use false answers you remember", score: 5 },
+            { text: "Use public information", score: 1 },
+            { text: "Skip security questions", score: 1 }
+        ]
+    },
+    {
+        question: "What should you check on website URLs?",
+        options: [
+            { text: "It looks nice", score: 1 },
+            { text: "HTTPS and padlock icon", score: 5 },
+            { text: "It has .com extension", score: 1 },
+            { text: "Color scheme", score: 1 }
+        ]
+    },
+    {
+        question: "How to handle USB drives from unknown sources?",
+        options: [
+            { text: "Plug in immediately", score: 1 },
+            { text: "Never use them", score: 5 },
+            { text: "Format without scanning", score: 2 },
+            { text: "Use on work computer only", score: 2 }
+        ]
+    },
+    {
+        question: "What is the best backup strategy?",
+        options: [
+            { text: "No backups needed", score: 1 },
+            { text: "3-2-1 rule (3 copies, 2 media, 1 offsite)", score: 5 },
+            { text: "Monthly backups", score: 2 },
+            { text: "Cloud only", score: 3 }
+        ]
+    }
+];
+
+// Configuration
+const QUESTIONS_PER_PAGE = 5;
+const TOTAL_PAGES = Math.ceil(questions.length / QUESTIONS_PER_PAGE);
+const MAX_SCORE = questions.length * 5; // 15 * 5 = 75
+
+// Current page
+let currentPage = 1;
+
+// Load questions for current page
+function loadQuestions() {
+    const container = document.getElementById('questions-container');
+    container.innerHTML = '';
+    
+    const startIndex = (currentPage - 1) * QUESTIONS_PER_PAGE;
+    const endIndex = Math.min(startIndex + QUESTIONS_PER_PAGE, questions.length);
+    
+    for (let i = startIndex; i < endIndex; i++) {
+        const q = questions[i];
+        const questionDiv = document.createElement('div');
+        questionDiv.className = 'mb-4';
+        
+        // Check if this question has been answered
+        const savedAnswer = localStorage.getItem(`q${i}`);
+        
+        questionDiv.innerHTML = `
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="question-number">Question ${i + 1} of ${questions.length}</h6>
+                ${savedAnswer ? '<span class="badge badge-success answered-badge">Answered</span>' : ''}
+            </div>
+            <p>${q.question}</p>
+            ${q.options.map((opt, optIndex) => `
+                <div class='form-check'>
+                    <input class='form-check-input' type='radio' 
+                           name='q${i}' value='${opt.score}' 
+                           id='q${i}opt${optIndex}'
+                           ${savedAnswer == opt.score ? 'checked' : ''}
+                           onchange="saveAnswer(${i}, ${opt.score})">
+                    <label class='form-check-label' for='q${i}opt${optIndex}'>
+                        ${opt.text}
+                    </label>
+                </div>
+            `).join('')}
+        `;
+        container.appendChild(questionDiv);
+    }
+    
+    updateNavigationButtons();
+    updateProgressIndicator();
+}
+
+// Save answer to localStorage
+function saveAnswer(questionIndex, score) {
+    localStorage.setItem(`q${questionIndex}`, score);
+    updateProgressIndicator();
+}
+
+// Change page
+function changePage(direction) {
+    const newPage = currentPage + direction;
+    if (newPage >= 1 && newPage <= TOTAL_PAGES) {
+        currentPage = newPage;
+        loadQuestions();
+    }
+}
+
+// Update navigation buttons state
+function updateNavigationButtons() {
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pageIndicator = document.getElementById('pageIndicator');
+    
+    prevBtn.disabled = currentPage === 1;
+    nextBtn.disabled = currentPage === TOTAL_PAGES;
+    pageIndicator.textContent = `Page ${currentPage} of ${TOTAL_PAGES}`;
+}
+
+// Update progress indicator
+function updateProgressIndicator() {
+    let answered = 0;
+    for (let i = 0; i < questions.length; i++) {
+        if (localStorage.getItem(`q${i}`)) {
+            answered++;
+        }
+    }
+    document.getElementById('progressIndicator').innerHTML = 
+        `<span class="badge badge-light">Answered: ${answered}/${questions.length}</span>`;
+}
+
+// Calculate score and determine risk level
+function calculateScore() {
+    let totalScore = 0;
+    let answered = 0;
+    
+    // Calculate total score from answered questions
+    for (let i = 0; i < questions.length; i++) {
+        const savedAnswer = localStorage.getItem(`q${i}`);
+        if (savedAnswer) {
+            totalScore += parseInt(savedAnswer);
+            answered++;
+        }
+    }
+    
+    // Check if all questions are answered
+    if (answered < questions.length) {
+        alert(`Please answer all questions. You have answered ${answered} out of ${questions.length} questions.`);
+        
+        // Find first unanswered question and go to that page
+        for (let i = 0; i < questions.length; i++) {
+            if (!localStorage.getItem(`q${i}`)) {
+                currentPage = Math.floor(i / QUESTIONS_PER_PAGE) + 1;
+                loadQuestions();
+                break;
+            }
+        }
+        return;
+    }
+    
+    // Calculate percentage
+    const percentage = (totalScore / MAX_SCORE) * 100;
+    
+    // Determine risk level
+    let riskLevel, riskClass, recommendation;
+    
+    if (percentage < 50) {
+        riskLevel = "HIGH RISK";
+        riskClass = "risk-high";
+        recommendation = "Your cybersecurity practices need immediate improvement. Review our security guidelines and consider additional training.";
+    } else if (percentage < 75) {
+        riskLevel = "MEDIUM RISK";
+        riskClass = "risk-medium";
+        recommendation = "You have basic security awareness but there's room for improvement. Focus on areas where you lost points.";
+    } else {
+        riskLevel = "LOW RISK";
+        riskClass = "risk-low";
+        recommendation = "Excellent! You demonstrate good cybersecurity awareness. Keep up with best practices and stay informed about new threats.";
+    }
+    
+    // Display results
+    const resultCard = document.getElementById('resultCard');
+    const resultHeader = document.getElementById('resultHeader');
+    const resultContent = document.getElementById('resultContent');
+    
+    resultCard.style.display = 'block';
+    resultHeader.className = `card-header ${riskClass}`;
+    resultHeader.innerHTML = `<h5>Your Results - ${riskLevel}</h5>`;
+    
+    // Generate detailed feedback
+    let detailedFeedback = '';
+    for (let i = 0; i < questions.length; i++) {
+        const answer = localStorage.getItem(`q${i}`);
+        if (answer) {
+            const score = parseInt(answer);
+            const maxScore = 5;
+            if (score < 3) {
+                detailedFeedback += `<li class="text-danger">Question ${i+1}: Needs improvement (Score: ${score}/${maxScore})</li>`;
+            } else if (score >= 4) {
+                detailedFeedback += `<li class="text-success">Question ${i+1}: Good understanding (Score: ${score}/${maxScore})</li>`;
+            }
+        }
+    }
+    
+    resultContent.innerHTML = `
+        <p><strong>Total Score:</strong> ${totalScore} out of ${MAX_SCORE}</p>
+        <p><strong>Percentage:</strong> ${percentage.toFixed(1)}%</p>
+        <p><strong>Risk Level:</strong> <span class="badge ${riskClass}">${riskLevel}</span></p>
+        <p><strong>Recommendation:</strong> ${recommendation}</p>
+        <hr>
+        <h6>Detailed Feedback:</h6>
+        <ul>
+            ${detailedFeedback}
+        </ul>
+    `;
+    
+    // Scroll to results
+    resultCard.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Reset the test
+function resetTest() {
+    if (confirm('Are you sure you want to reset all answers?')) {
+        // Clear all saved answers from localStorage
+        localStorage.clear();
+        
+        // Reset to first page
+        currentPage = 1;
+        
+        // Reload questions
+        loadQuestions();
+        
+        // Hide result card
+        document.getElementById('resultCard').style.display = 'none';
+    }
+}
+
+// Restart test
+function restartTest() {
+    resetTest();
+}
+
+// Initialize the test
+window.onload = function() {
+    // Check for existing answers in localStorage
+    loadQuestions();
+};
+</script>
+
+</body>
+</html>

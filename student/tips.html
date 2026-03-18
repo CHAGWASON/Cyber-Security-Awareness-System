@@ -1,0 +1,164 @@
+<?php
+session_start();
+include("../config/db.php");
+
+if(!isset($_SESSION['user_id'])){
+    header("Location: login.php");
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cybersecurity Tips</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+</head>
+
+<body class="bg-light">
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand"><i class="fa fa-lock"></i> Cybersecurity Awareness Tips</a>
+        <a href="dashboard.php" class="btn btn-light">Back to Dashboard</a>
+    </div>
+</nav>
+
+<div class="container mt-5">
+
+    <!-- HEADER -->
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">Stay Safe Online</h2>
+        <p class="text-muted">Follow these essential cybersecurity practices to protect your data and identity.</p>
+    </div>
+
+    <!-- ALERT -->
+    <div class="alert alert-warning text-center">
+        <i class="fa fa-exclamation-triangle"></i> Cyber threats are increasing daily. Always stay alert and practice safe online behavior.
+    </div>
+
+    <div class="row g-4">
+
+        <!-- PASSWORD SECURITY -->
+        <div class="col-md-6">
+            <div class="card shadow h-100 border-danger">
+                <div class="card-header bg-danger text-white">
+                    <i class="fa fa-lock"></i> Password Security
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li>Use strong passwords (mix of letters, numbers, symbols)</li>
+                        <li>Never reuse passwords across multiple platforms</li>
+                        <li>Change passwords regularly</li>
+                        <li>Use a password manager</li>
+                        <li>Avoid saving passwords on public computers</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHISHING -->
+        <div class="col-md-6">
+            <div class="card shadow h-100 border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <i class="fa fa-empire"></i> Phishing Awareness
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li>Do not click suspicious links</li>
+                        <li>Verify email senders before responding</li>
+                        <li>Avoid downloading unknown attachments</li>
+                        <li>Watch out for urgent or threatening messages</li>
+                        <li>Check website URLs before entering credentials</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- DEVICE SECURITY -->
+        <div class="col-md-6">
+            <div class="card shadow h-100 border-info">
+                <div class="card-header bg-info text-white">
+                    <i class="fa fa-expeditedssl"></i> Device Security
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li>Install antivirus and anti-malware software</li>
+                        <li>Keep OS and apps updated</li>
+                        <li>Use screen lock (PIN, password, fingerprint)</li>
+                        <li>Avoid installing untrusted apps</li>
+                        <li>Enable firewall protection</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- INTERNET SAFETY -->
+        <div class="col-md-6">
+            <div class="card shadow h-100 border-primary">
+                <div class="card-header bg-primary text-white">
+                    <i class="fa fa-soundcloud"></i> Internet Safety
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li>Avoid sensitive transactions on public Wi-Fi</li>
+                        <li>Use VPN when necessary</li>
+                        <li>Log out from shared devices</li>
+                        <li>Only visit secure websites (https://)</li>
+                        <li>Clear browser history on public systems</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- DATA PROTECTION -->
+        <div class="col-md-6">
+            <div class="card shadow h-100 border-success">
+                <div class="card-header bg-success text-white">
+                    <i class="fa fa-first-order"></i> Data Protection
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li>Backup important files regularly</li>
+                        <li>Use cloud storage securely</li>
+                        <li>Encrypt sensitive data</li>
+                        <li>Avoid sharing confidential information</li>
+                        <li>Secure your USB/external drives</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SOCIAL MEDIA -->
+        <div class="col-md-6">
+            <div class="card shadow h-100 border-dark">
+                <div class="card-header bg-dark text-white">
+                    <i class="fa fa-medium"></i> Social Media Safety
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li>Limit personal information shared online</li>
+                        <li>Adjust privacy settings on accounts</li>
+                        <li>Avoid accepting unknown friend requests</li>
+                        <li>Be cautious of fake profiles</li>
+                        <li>Do not share location publicly</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FOOTER NOTE -->
+    <div class="text-center mt-5">
+        <p class="text-muted">
+            💡 Staying informed is your first defense against cyber threats.
+        </p>
+    </div>
+
+</div>
+
+</body>
+</html>
